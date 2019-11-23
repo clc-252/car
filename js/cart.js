@@ -192,7 +192,7 @@ $(function () {
   $('.item-list').on('blur', '.number', function () {
     // 每次让用户输入的时候，都需要验证一下用户输入的数据是否合理
     let content = $(this).val();
-    if (content.trim().length === 0 || isNaN(content) || parseInt(content) <= 0) {
+    if (content.trim().length === 0 || isNaN(content) || parseInt(content) < 1) {
       // 如果用户输入的数据不合理，则提示用户
       alert('你输入的数据不正确，请重新输入');
       // 当用户输入不正确时，在输入框中回复原来的数据
@@ -205,7 +205,7 @@ $(function () {
     let id = $(this).parents('.item').attr('data-id');
     // 数组中找到id相同的这个商品
     let obj = arr.find(e => {
-      return e.pID = id;
+      return e.pID == id;
     })
     // 修改该商品的件数
     // 注意：此时的content是一个字符串，所以要将它转为数字之后才可以计算
@@ -216,5 +216,25 @@ $(function () {
     cartTotal();
     // 再把右边的小计更改
     $(this).parents('.item').find('.computed').text(obj.number * obj.price);
+  })
+
+
+  // -----------------实现删除功能------------------
+  $('.item-list').on('click','.item-del',function(){
+    layer.confirm('你确定要删除吗?', {icon: 0, title:'警告'}, (index)=>{
+      layer.close(index);
+      // 点击确定后执行的代码
+      // 先得到要删除的数据的id
+      let id = $(this).parents('.item').attr('data-id');
+      // 把当前点击的这个删除对应的这一行删掉
+      $(this).parents('.item').remove();
+      // 还要把本地存储里面的数据删除
+      arr = arr.filter(e=>{
+        return e.pID != id; //返回符合条件的元素
+      });
+      kits.saveData('cartListData',arr);
+      // 重新计算总件数和总价
+      calcTotal();
+    });
   })
 })
