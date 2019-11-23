@@ -41,14 +41,30 @@ $(function () {
   })
   // 添加到页面结构中
   $('.item-list').append(html);
-  
+
   // 判断购物车中有没有商品
-  if(arr.length!==0){
-  // 如果有商品要把空空如也隐藏掉
+  if (arr.length !== 0) {
+    // 如果有商品要把空空如也隐藏掉
     $('.empty-tip').hide();
     // 把表头显示
     $('.cart-header').show();
     // 把底部用于计算总件数和总价的div显示
     $('.total-of').show();
   }
+
+
+  // -----------------实现全选和点选-------------------
+  // 获取全选框注册点击事件
+  $('.pick-all').on('click', function () {
+    // 当勾选全按钮时，所有单选按钮也都勾选上
+    let status = $(this).prop('checked');
+    $('.item-ck').prop('checked', status);
+    $('.pick-all').prop('checked', status);
+  })
+
+  $('.item-list').on('click', '.item-ck', function () {
+    // 如果点选的个数跟所有商品的数量相等的话，说明全部勾选了
+    let ckAll = $('.item-ck').length === $('.item-ck:checked').length;
+    $('.pick-all').prop('checked', ckAll);
+  })
 })
