@@ -219,9 +219,23 @@ $(function () {
   })
 
 
+  // ----------------------实现回车也能修改商品件数----------------------------
+  $('.item-list').on('keydown', '.number', function (e) {
+    // 判断键盘按下的是否是回车键
+    if (e.keyCode === 13) {
+      // console.log(123);
+      // 如果按下的是回车
+      // console.log($(this).val());
+      $('.item-list').on();
+    }
+  })
+
   // -----------------实现删除功能------------------
-  $('.item-list').on('click','.item-del',function(){
-    layer.confirm('你确定要删除吗?', {icon: 0, title:'警告'}, (index)=>{
+  $('.item-list').on('click', '.item-del', function () {
+    layer.confirm('你确定要删除吗?', {
+      icon: 0,
+      title: '警告'
+    }, (index) => {
       layer.close(index);
       // 点击确定后执行的代码
       // 先得到要删除的数据的id
@@ -229,10 +243,10 @@ $(function () {
       // 把当前点击的这个删除对应的这一行删掉
       $(this).parents('.item').remove();
       // 还要把本地存储里面的数据删除
-      arr = arr.filter(e=>{
+      arr = arr.filter(e => {
         return e.pID != id; //返回符合条件的元素
       });
-      kits.saveData('cartListData',arr);
+      kits.saveData('cartListData', arr);
       // 重新计算总件数和总价
       calcTotal();
     });
