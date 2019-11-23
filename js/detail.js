@@ -74,5 +74,9 @@ $(function () {
     }
     // 转换成符合json格式的字符串然后存到本地
     kits.saveData('cartListData', arr);
+
+  // 实现点击跳转到购物车界面
+  // js文件里面的路径是引入它的html文件的相对路径
+  location.href = './cart.html';
   })
 })
