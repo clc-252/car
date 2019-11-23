@@ -142,6 +142,9 @@ $(function () {
     kits.saveData('cartListData', arr);
     // 然后还需要再重新进行商品总件数和总价格的计算
     cartTotal();
+    // 修改右边商品价格小计的计算
+    // 根据当前点击的这个元素找到右边小计的元素，修改它的内容
+    $(this).parents('.item').find('.computed').text(obj.number * obj.price);
   })
 
   // 实现商品数量减少的功能
@@ -172,5 +175,46 @@ $(function () {
     kits.saveData('cartListData', arr);
     // 然后还需要再重新进行商品总件数和总价格的计算
     cartTotal();
+  })
+
+
+  // ----------------------实现让用户自己输入商品件数--------------------------
+
+  // 在输入框获得焦点的时候，先把当前输入框中的内容存起来，在用户输入不正确数据时，可以在输入框中回复原来的数据
+  $('.item-list').on('focus', '.number', function () {
+    // 获取原本的数据
+    let oldData = $(this).val();
+    // 给当前元素添加一个自定义属性
+    $(this).attr('data-old', oldData);
+  });
+
+  // 当输入框失焦的时候，把用户输入的内容存到本地
+  $('.item-list').on('blur', '.number', function () {
+    // 每次让用户输入的时候，都需要验证一下用户输入的数据是否合理
+    let content = $(this).val();
+    if (content.trim().length === 0 || isNaN(content) || parseInt(content) <= 0) {
+      // 如果用户输入的数据不合理，则提示用户
+      alert('你输入的数据不正确，请重新输入');
+      // 当用户输入不正确时，在输入框中回复原来的数据
+      let oldData = $(this).attr('data-old');
+      $(this).val(oldData);
+      // 下面就不用执行了
+      return;
+    }
+    // 如果验证通过了，就将数据保存到本地中
+    let id = $(this).parents('.item').attr('data-id');
+    // 数组中找到id相同的这个商品
+    let obj = arr.find(e => {
+      return e.pID = id;
+    })
+    // 修改该商品的件数
+    // 注意：此时的content是一个字符串，所以要将它转为数字之后才可以计算
+    obj.number = parseInt(content);
+    // 然后再把数据更新到本地存储中
+    kits.saveData('cartListData', arr);
+    // 然后重新计算商品的总件数和总价格
+    cartTotal();
+    // 再把右边的小计更改
+    $(this).parents('.item').find('.computed').text(obj.number * obj.price);
   })
 })
