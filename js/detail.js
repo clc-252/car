@@ -67,7 +67,9 @@ $(function () {
         imgSrc: target.imgSrc,
         price: target.price,
         // 还应该有商品的件数，在点击加入购物车的时候就获取输入框中的件数
-        number: number
+        number: number,
+        // 还需要有一个用来判断该商品是否被勾选的属性
+        isChecked: true
       }
       // 把商品信息存到数组中
       arr.push(obj);
@@ -75,8 +77,8 @@ $(function () {
     // 转换成符合json格式的字符串然后存到本地
     kits.saveData('cartListData', arr);
 
-  // 实现点击跳转到购物车界面
-  // js文件里面的路径是引入它的html文件的相对路径
-  location.href = './cart.html';
+    // 实现点击跳转到购物车界面
+    // js文件里面的路径是引入它的html文件的相对路径
+    location.href = './cart.html';
   })
 })

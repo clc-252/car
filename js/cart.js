@@ -9,7 +9,7 @@ $(function () {
     <div class="row">
       <div class="cell col-1 row">
         <div class="cell col-1">
-          <input type="checkbox" class="item-ck" checked="">
+          <input type="checkbox" class="item-ck" ${e.isChecked ? 'checked' : ''}>
         </div>
         <div class="cell col-4">
           <img src="${e.imgSrc}" alt="">
@@ -66,5 +66,20 @@ $(function () {
     // 如果点选的个数跟所有商品的数量相等的话，说明全部勾选了
     let ckAll = $('.item-ck').length === $('.item-ck:checked').length;
     $('.pick-all').prop('checked', ckAll);
+
+    // 在点选的同时，需要修改该商品在本地存储中的数据
+    // 利用点击的id，找到对应的商品，修改它的isChecked的值
+    let pID = $(this).parents('.item').attr('data-id');
+    // 判断当前这个单选框是否被勾选
+    let isChecked = $(this).prop('checked');
+    // 修改它的isChecked
+    arr.forEach(e => {
+      // 判断如果数组有数据的id跟点击获取到的id相同，那就修改它的isChecked
+      if (e.pID == pID) {
+        e.isChecked = isChecked;
+      }
+    })
+    // 然后再覆盖回本地
+    kits.saveData('cartListData', arr);
   })
 })
