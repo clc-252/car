@@ -45,15 +45,33 @@ $(function () {
     // 把商品的相关信息都存到本地数据中
     let arr = kits.loadData('cartListData');
     // 有了数组之后就可以往里面存数据，因为商品的信息有很多，所以使用对象存
-    let obj = {
-      pID: target.pID,
-      name: target.name,
-      imgSrc: target.imgSrc,
-      price: target.price,
-      // 还应该有商品的件数，在点击加入购物车的时候就获取输入框中的件数
+    // 发现当点击相同商品时，会在本地数据中出项两个记录，这样会导致在购物车中展示的时候出现相同商品展示两次的结果，但我们想要的效果是将相同商品的件数叠加起来一起展示
+    // 可以利用每个商品不同的id来判断，如果购物车中已经存在这个商品，则将它们的件数相加，生成一个记录
+    let exist = arr.find(e => {
+      // 在数组中查找是否有id相同的数据
+      return e.pID == id;
+    })
+    // console.log(exist);
+    // 此时的number是一个字符串，为了让件数可以正常的相加，要把number转成数字再进行运算
+    number = parseInt(number);
+    // 如果返回的是一个undefined，则证明该商品没有存在数组中
+    // 如果该商品已经存在了，则会返回该商品，则在boolean类型中是true
+    if (exist) {
+      // 商品存在，将它们的件数相加
+      exist.number += number;
+    } else {
+      // 否则说明该商品没有存在本地数据中，则在本地中新存进入
+      let obj = {
+        pID: target.pID,
+        name: target.name,
+        imgSrc: target.imgSrc,
+        price: target.price,
+        // 还应该有商品的件数，在点击加入购物车的时候就获取输入框中的件数
+        number: number
+      }
+      // 把商品信息存到数组中
+      arr.push(obj);
     }
-    // 把商品信息存到数组中
-    arr.push(obj);
     // 转换成符合json格式的字符串然后存到本地
     kits.saveData('cartListData', arr);
   })
