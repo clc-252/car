@@ -60,6 +60,16 @@ $(function () {
     let status = $(this).prop('checked');
     $('.item-ck').prop('checked', status);
     $('.pick-all').prop('checked', status);
+
+    // 在全选的时候也要把勾选状态存进本地
+    arr.forEach(e => {
+      e.isChecked = status;
+    })
+    //把数据重新更新回本地
+    kits.saveData('cartListData', arr);
+
+    // 全选的时候也要计算商品总件数和总价格
+    cartTotal();
   })
 
   $('.item-list').on('click', '.item-ck', function () {
@@ -81,5 +91,29 @@ $(function () {
     })
     // 然后再覆盖回本地
     kits.saveData('cartListData', arr);
+
+    // 在点选的时候，也要计算商品总件数和总价格
+    cartTotal();
   })
+
+
+  // --------------实现计算商品总件数和总价格-------------------
+  // 封装成一个函数，方便在其他地方使用
+  function cartTotal() {
+    // 我们需要从本地数据中获取到isChecked为true的商品，然后得到它的件数和单价，在计算出所有被勾选商品的总件数和总价格
+    // 先定义变量来存放件数和总价格
+    let totalCount = 0; // 总件数
+    let totalMoney = 0; // 总价格
+    arr.forEach(e => {
+      // 判断数据中isChecked为true的商品
+      if (e.isChecked) {
+        totalCount += e.number;
+        totalMoney += e.number * e.price;
+      }
+    })
+    // 再把计算的到的总件数和总价格的数据更新到页面上
+    $('.selected').text(totalCount);
+    $('.total-money').text(totalMoney);
+  }
+  cartTotal();
 })
