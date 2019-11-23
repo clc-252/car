@@ -26,4 +26,35 @@ $(function () {
   $('.sku-name').text(target.name);
   // 修改价格
   $('.summary-price em').text(`¥${target.price}`);
+
+
+
+  //获取加入购物车按钮，注册点击事件
+  $('.addshopcar').on('click', function () {
+    // 先获取加入购物车的商品件数
+    let number = $('.choose-number').val();
+    // 需要判断用户输入的数据的合理性
+    // 不输入或输入空格、输入除数字外的其他字符、输入<=0的数字这几种情况都是不合理的
+    if (number.trim().length === 0 || isNaN(number) || parseInt(number) <= 0) {
+      // 如果用户输入的数据不合理，则提示用户
+      alert('你输入的数据不正确，请重新输入');
+      // 下面就不用执行了
+      return;
+    }
+
+    // 把商品的相关信息都存到本地数据中
+    let arr = kits.loadData('cartListData');
+    // 有了数组之后就可以往里面存数据，因为商品的信息有很多，所以使用对象存
+    let obj = {
+      pID: target.pID,
+      name: target.name,
+      imgSrc: target.imgSrc,
+      price: target.price,
+      // 还应该有商品的件数，在点击加入购物车的时候就获取输入框中的件数
+    }
+    // 把商品信息存到数组中
+    arr.push(obj);
+    // 转换成符合json格式的字符串然后存到本地
+    kits.saveData('cartListData', arr);
+  })
 })
