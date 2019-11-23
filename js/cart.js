@@ -116,4 +116,61 @@ $(function () {
     $('.total-money').text(totalMoney);
   }
   cartTotal();
+
+
+  // ----------------------实现商品数量的加减------------------
+  // 因为商品都是动态生成的，所以需要用事件委托来注册事件
+  // 实现商品数量增加的功能
+  $('.item-list').on('click', '.add', function () {
+    // 当点击+时，修改输入框中的数据
+    //prev（）方法可以获得当前元素的前面一个元素
+    // 获取输入框中的内容
+    let content = $(this).prev().val();
+    content++;
+    $(this).prev().val(content);
+    // 还有将增加后的数据更新到本地存储的数据中
+    // 根据id找到对应的商品
+    // 获取到用户点击的那个+ 那一行商品的id
+    let id = $(this).parents('.item').attr('data-id');
+    // 利用find（）方法，找到pID跟id相同的商品
+    let obj = arr.find(e => {
+      return e.pID == id;
+    })
+    // 修改该商品的件数
+    obj.number = content;
+    // 再把修改完的数据保存到本地存储中
+    kits.saveData('cartListData', arr);
+    // 然后还需要再重新进行商品总件数和总价格的计算
+    cartTotal();
+  })
+
+  // 实现商品数量减少的功能
+  $('.item-list').on('click', '.reduce', function () {
+    // 点击-时，输入框中商品的数量会减少
+    // next()方法可以找到当前元素的下一个元素
+    // 获取输入框中的内容
+    let content = $(this).next().val();
+    content--;
+    // 需要控制减少的商品的数量，在商品数量为1时，那就不允许用户再继续减了
+    if (content < 1) {
+      // 提示用户
+      alert('该商品的数量不能再减少了');
+      return;
+    }
+    $(this).next().val(content);
+    // 还有将减少后的数据更新到本地存储的数据中
+    // 根据id找到对应的商品
+    // 获取到用户点击的那个+ 那一行商品的id
+    let id = $(this).parents('.item').attr('data-id');
+    // 利用find（）方法，找到pID跟id相同的商品
+    let obj = arr.find(e => {
+      return e.pID == id;
+    })
+    // 修改该商品的件数
+    obj.number = content;
+    // 再把修改完的数据保存到本地存储中
+    kits.saveData('cartListData', arr);
+    // 然后还需要再重新进行商品总件数和总价格的计算
+    cartTotal();
+  })
 })
