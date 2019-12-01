@@ -226,7 +226,32 @@ $(function () {
       // console.log(123);
       // 如果按下的是回车
       // console.log($(this).val());
-      $('.item-list').on();
+      // $('.item-list').on();
+      let content = $(this).val();
+      if (content.trim().length === 0 || isNaN(content) || parseInt(content) < 1) {
+        // 如果用户输入的数据不合理，则提示用户
+        alert('你输入的数据不正确，请重新输入');
+        // 当用户输入不正确时，在输入框中回复原来的数据
+        let oldData = $(this).attr('data-old');
+        $(this).val(oldData);
+        // 下面就不用执行了
+        return;
+      }
+      // 如果验证通过了，就将数据保存到本地中
+      let id = $(this).parents('.item').attr('data-id');
+      // 数组中找到id相同的这个商品
+      let obj = arr.find(e => {
+        return e.pID == id;
+      })
+      // 修改该商品的件数
+      // 注意：此时的content是一个字符串，所以要将它转为数字之后才可以计算
+      obj.number = parseInt(content);
+      // 然后再把数据更新到本地存储中
+      kits.saveData('cartListData', arr);
+      // 然后重新计算商品的总件数和总价格
+      cartTotal();
+      // 再把右边的小计更改
+      $(this).parents('.item').find('.computed').text(obj.number * obj.price);
     }
   })
 
